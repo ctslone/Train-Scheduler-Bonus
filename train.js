@@ -42,6 +42,9 @@ $(document).ready(function () {
             firstTime: firstTime,
             dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
+
+        // clearing the inputs
+        $("#train-name-input, #destination-input, #frequency-input, #first-time-input").val('')
     })
 
         // listener for adding a child to the DB
@@ -50,65 +53,51 @@ $(document).ready(function () {
             var sv = snapshot.val();
 
             // checking
-            console.log("snapshot: " + sv.trainName);
-            console.log("snapshot: " + sv.destination);
-            console.log("snapshot: " + sv.frequency);
-            console.log("snapshot: " + sv.firstTime);
-            console.log("snapshot: " + sv.dateAdded);
+            // console.log("snapshot: " + sv.trainName);
+            // console.log("snapshot: " + sv.destination);
+            // console.log("snapshot: " + sv.frequency);
+            // console.log("snapshot: " + sv.firstTime);
+            // console.log("snapshot: " + sv.dateAdded);
 
+            // current time
             var currentTime = moment();
+            // creating a reference in the past so that JS has a previous time to reference
             var firstTrain = moment(sv.firstTime, "HH:mm").subtract(1, "years");
                 console.log("First Train: "+firstTrain)
-            var diffTime = moment().diff(moment(firstTrain), "minutes");
+            // the difference in time in minutes between the first train one year ago and the current time
+            var diffTime = currentTime.diff(moment(firstTrain), "minutes");
                 console.log("Difference in time is: " + diffTime);
+            // the remainder of time leftover after the difference in time is divided by the user input of frequency
             var remainTime = diffTime % sv.frequency;
                 console.log("Remainder minutes: "+remainTime);
+            // calcualting time till next train in minutes
             var timeTillNext = sv.frequency - remainTime;
                 console.log("Time till next train: "+timeTillNext);
+            // calculating the next arrivial time in minutes from now
             var nextArrival = moment().add(timeTillNext, "minutes")
 
             var nameTd = $("<td>").text(sv.trainName);
             var destinationTd = $("<td>").text(sv.destination);
             var frequencyTd = $("<td>").text(sv.frequency);
             var nextArrivalTd = $("<td>").text(timeTillNext);
+            // converting minutes into h:mm format and adding ap/pm (a)
             var minutesAwayTd = $("<td>").text(moment(nextArrival).format("h:mm a"));
 
+            // appending th variables to the row and then prepending the row to the table
             var tR = $("<tr>");
-            var editBtns = $("<button type='button' id='del-btn' class='edit-btn btn btn-secondary btn-sm'>Delete</button>")
-            tR.append(nameTd, destinationTd, frequencyTd, minutesAwayTd, nextArrivalTd, editBtns)
+            tR.append(nameTd, destinationTd, frequencyTd, minutesAwayTd, nextArrivalTd)
             $("#train-table").prepend(tR);
-            // console.log("appended")
+            // console.log("added")
             
             // playing a sweet train sound when the user adds a train!
             trainHorn();
-
-            // $("#del-btn").on("click", function() {
-            //     console.log("delet btn");
-            //     (this).closest("tr").remove();
-            //     // ref.child(this).removeValue();
-
-            // })
         })
 
-        
-
-        
-
-
-
-// FUNCTIONS
+// OTHER FUNCTIONS
 
 function trainHorn(horn) {
     var horn = document.createElement("audio");
     horn.src = "media/horn.mp3"
     horn.play();
 }
-
-
-
-
-
-
-
-
 })

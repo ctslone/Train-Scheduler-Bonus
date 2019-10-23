@@ -31,9 +31,10 @@ body {
 #train-table th,
     td {
       display: inline-block;
-      width: 16.66%;
+      width: 20%;
     }
 
+/* add scrollable table styling here */
 #scroll {
     max-height: 350px;
     width: 100%;
@@ -43,8 +44,4 @@ body {
 
 #choo-choo-btn {
     background-color: #E07A5F;
-}
-
-.edit-btn {
-    margin: 5px;
 }
