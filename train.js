@@ -69,6 +69,9 @@ $("#choo-choo-btn").on("click", function (form) {
 
     // clearing the inputs
     $("#train-name-input, #destination-input, #frequency-input, #first-time-input").val('')
+
+     // playing a sweet train sound when the user adds a train!
+     trainHorn();
 })
 
 // listener for adding a child to the DB
@@ -109,9 +112,6 @@ database.ref().on("child_added", function (snapshot) {
     tR.append(nameTd, destinationTd, frequencyTd, minutesAwayTd, nextArrivalTd)
     $("#train-table").prepend(tR);
     // console.log("added")
-
-    // playing a sweet train sound when the user adds a train!
-    trainHorn();
 })
 
 // OTHER FUNCTIONS
