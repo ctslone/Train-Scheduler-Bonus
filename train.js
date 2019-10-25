@@ -19,6 +19,18 @@ var trainName = "";
 var destination = "";
 var frequency = "";
 var firstTime = "";
+(function() {
+
+// firebase.auth().onAuthStateChanged(function(user) {
+//     // console.log(user);
+//     if (user) {
+//       // User is signed in.
+//       return window.location.replace("main.html")
+//     }
+//     else {
+//         return window.location.replace("index.html")
+//     }
+//   });
 
 function logOut() {
     firebase.auth().signOut();
@@ -26,7 +38,11 @@ function logOut() {
 
 $("#log-out").on("click", function() {
     logOut();
+    console.log("log out");
+    return window.location.replace("index.html")
+    
 })
+})()
 
 // creating an on click event listener for the choo choo button
 $("#choo-choo-btn").on("click", function (form) {
@@ -69,36 +85,28 @@ database.ref().on("child_added", function (snapshot) {
     // console.log("Difference in time is: " + diffTime);
     // the remainder of time leftover after the difference in time is divided by the user input of frequency
     var remainTime = diffTime % sv.frequency;
-    // console.log("Remainder minutes: " + remainTime);
+    console.log("Remainder minutes: " + remainTime);
     // calcualting time till next train in minutes
     var timeTillNext = sv.frequency - remainTime;
-    // console.log("Time till next train: " + timeTillNext);
+    console.log("Time till next train: " + timeTillNext);
     // calculating the next arrivial time in minutes from now
     var nextArrival = moment().add(timeTillNext, "minutes")
 
     var nameTd = $("<td>").text(sv.trainName);
     var destinationTd = $("<td>").text(sv.destination);
     var frequencyTd = $("<td>").text(sv.frequency);
-    // var nextArrivalTd = $("<td>").text(timeTillNext);
+    var nextArrivalTd = $("<td>").text(timeTillNext);
     // converting minutes into h:mm format and adding ap/pm (a)
     var minutesAwayTd = $("<td>").text(moment(nextArrival).format("h:mm a"));
 
+    // auto update pseudocode
     // make it so moment JS updates every minute for next arrivial and minutes away
     // need to use setInterval for this
     // make all of the desired varibles (nextarrival, timetill) in a function and have that funcction be called every 60 seconds
 
-    function updateTime() {
-        var nextArrivalTd = $("<td>").text(timeTillNext);
-    }
-
-    updateTime();
-    setInterval(function () {
-        updateTime();
-    }, 60000);
-
     // appending th variables to the row and then prepending the row to the table
     var tR = $("<tr>");
-    tR.append(nameTd, destinationTd, frequencyTd, minutesAwayTd)
+    tR.append(nameTd, destinationTd, frequencyTd, minutesAwayTd, nextArrivalTd)
     $("#train-table").prepend(tR);
     // console.log("added")
 
